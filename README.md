@@ -1,9 +1,9 @@
 # My-R-Codes-Compilation
-##My R Intro
-###Data visualization allows us visual access to huge amount of data in easily digestible visuals. 
-###One of the most popular used tools for data viualization is R. R can also be used for a programming language for analytical purposes.
-###R is an example of FLOSS(free/libre and open source software)
-###In R, someone can perform both data analysis and data visualization.
+**My R Intro
+Data visualization allows us visual access to huge amount of data in easily digestible visuals. 
+One of the most popular used tools for data viualization is R. R can also be used for a programming language for analytical purposes.
+R is an example of FLOSS(free/libre and open source software)
+In R, someone can perform both data analysis and data visualization.
 
 **This Projects consist of two part;
 1. Filled with R basics, explanations and examples
