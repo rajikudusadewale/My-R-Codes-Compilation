@@ -1,0 +1,216 @@
+====USING DPLYR======== 
+Its also possible to join two datasets easily within the R language using functionality provided by the dplyr pkg.
+-----------------------------------------------------------------
+
+library(dplyr)
+
+# Load income data for dissemination areas, and join by the csd geo_code the boundary data frame:
+csd_income <- arc.open('data/census/census2016.gdb/income2016csd') %>%    #Note dataset used here is not available. But you through it to know how the syntaxes can be use.
+ arc.select(c("geo_code", "gnr", "pop2016_t", "popdens_t", "income_median_t"),
+where_clause = "gnr is not null and gnr < 25") %>%
+ right_join(csd_df, by = c("geo_code" = "CSDUID"))
+class(csd_income)
+## [1] "data.frame"
+
+# Add columns back to the boundaries data frame:
+csd_df$income_median_t <- csd_income$income_median_t
+# To rank using quantile (ntile function)
+csd_df$income_group <- ntile(csd_df$income_median_t, 5)
+
+------------------------------------------------------------------
+introduces the forward pipe operator (i.e %>%) for producing more intuitive workflows in R. e.g filter, select, arrange, summarize, mutate.
+*Crime_df %>%                 NOTE , mean & in filter operator
+	filter(Murders!= 0, Neighhood == "Yonge-St" | Thefts <= 10)%>%
+	select(Arsons, Assaults)
+
+# summarize_at() function is used to obtain min/max values of population and medin income for each groups.
+
+filter(crime_df, Murders != 0) = crime_df[crime_df$Murder != 0,]
+view(arrange(crime_df, Arreas))
+view(arrange(crime_df, desc(Arreas)))
+view(arrange(crime_df, Arsons, Assaults))
+# select(crime_df, Area, Equilty)  ---------> only select columns 
+ select(crime_df, -Areas, -Equilty) --------> to remove col
+#summarize(crime_df, c('mean', 'sum', 'sd'), Assaults)
+#mutate: add columns to the existing df (mutate_at)
+mutate(group = ntile(data_df$field, no_of_tile))>%>
+group_by(group)
+
+=============DATA VISUALIZATION IN R USING GGPLOT2=======================
+ggplot2 is a plotting pkg that makes it simple to create complex plots from data stored in a data frame. 
+It provides a programmatic interface for specifying what variables to plot, how they are displayed, and general visual properties.
+
+====================================
+ggplot(data = <DATA>, mapping = aes(<MAPPING>)) + <GEOM_FUNCTION>()
+diff geom functions(): geom_point() for scatter plot and dot plot
+		geom_boxplot() for well boxplots
+		geom_line() for trend lines, time series, etc.
+====================================
+
+Includes: bar chart, pie chart, Boxplot, histogram, line graph, scatterplot.
+**PIE CHART are best to use when u are trying to  compare parts of a whole.
+vtr <- c(12,43,54,67,32)
+names <- c("dude","dam","duke","duck","doom")
+pie(vtr, names, col = rainbow(length(vtr)))
+
+**BAR GRAPHS: are used to compare things btw diff groups or to track changes over time.
+
+**BOXPLOT: are used to summarize data from multiple sources and display the results in a single graph.
+
+
+*****************Manipulation and visualization of spatial data*******************
+• arc.data2sp() - easily converts ArcGIS spatial data frames to sp data frame objects
+(SpatialPointsDataFrame, SpatialLinesDataFrame, or SpatialPolygonsDataFrame)
+
+• arc.data2sf() - converts ArcGIS spatial data frames to sf simple feature 
+data frames (POINT,MULTIPOINT, POLYGON, MULTIPOLYGON, LINESTRING, or MULTILINESTRING)
+• arc.shape2sp() and arc.shape2sf() - if you do not require the attributes associated with your features, 
+these methods may be used to convert an ArcGIS shape object (from an ArcGIS spatial data frame) into simple sp spatial objects
+ (SpatialLines, SpatialPoints, or SpatailPolygons) or sf objects 
+(POINT, MULTIPOINT, POLYGON, MULTIPOLYGON, LINESTRING, or MULTILINESTRING)
+
+**********sp PKG makes it easy to generate map plots using the spplot() func,
+ which exposes many dplyr-like verbs. Numerous other packages that provide geospatial
+ analytical methods will accept or return sp data objects as inputs and outputs. Similarly,
+ by converting data to sf objects, you have the ability to use many standard spatial operation 
+functions provided by the sf package (e.g., st_union, st_intersection, st_distance).
+
+******two df can be join together using sp pkg (left_join)
+# Load Saskatchewan boundaries and income data:
+sask_df <- arc.select(csd, fields = c("PRNAME", "CSDNAME", "CSDUID"), where_clause =
+"PRNAME like 'Sask%'")
+income_df <- arc.open('data/census/census2016.gdb/income2016csd') %>%
+ arc.select(c("geo_code", "gnr", "pop2016_t", "popdens_t", "income_median_t"),
+where_clause = "gnr is not null and gnr < 25")
+# Join income data to the saskatchewan boundaries by using an intermediate sp
+data frame
+csd_income_sp <- left_join(arc.data2sp(sask_df), income_df, by = c("CSDUID" =
+"geo_code"))
+class(csd_income_sp)
+## [1] "SpatialPolygonsDataFrame"
+## attr(,"package")
+## [1] "sp"
+
+=====================Reading, writing, loading, and saving data=========
+>>>There are three (3) basic formats for reading data in R: 1- Text files,2- R data files, 3- spatial data file (shp)
+>>>>>how to read spatial data to R:
+>>>Nig <- readShapeline(field.choose())
+>>>choropleth(Nig, Nig$ID_1)
+============================how to read spatial data and to make a map and histogram==============
+
+denverCensusTracts <- readShapePoly(file.choose())
+pcwhite <- denverCensusTracts$PCT_WHITE
+shades <- auto.shading(pcwhite, n = 6, cutter = rangeCuts, cols = brewer.pal(6, "Blues"))
+choropleth(denverCensusTracts, pcwhite, shades)
+choro.legend(-104.85, 39.75, shades, fmt = "%4.1f", title = "Percent White Population")
+title("Percent White Population in Denver")
+north.arrow(-104.98, 39.62, 0.010)
+hist(denverCensusTracts$PCT_WHITE, col = "red")
+
+
+
+===============sp Types==========record spatial data. 0D: spatial points, 1D:spatLines, 2D,spatArea, 3D:solid, 4D:spacetime
+=================================================================================
+*********SPATIAL ANALYTICS********************
+defines spatial statistics as the field of study concerning statistical methods that use space and spatial relationships (such as distance, area, volume, length, 
+height, orientation, centrality, and/or other spatial characteristics of data) directly in their mathematical computations. Spatial
+statistics are used for a variety of different types of analyses, including pattern analysis, shape analysis, surface modeling and surface prediction, 
+spatial regression, statistical comparisons of spatial datasets, statistical modeling and prediction of spatial interaction,
+and more. The many types of spatial statistics include descriptive, inferential, exploratory, geostatistical, and econometric statistics.
+=====================Modeling Spatial Relationships with ArcGIS Tools==========================
+**There are essentially three reasons to use Regression Analysis. The first is to gain an understanding of a phenomenon and effect policy or make decisions about 
+appropriate actions to take. The next is to create predictive models of a phenomenon that can be applied to other areas, and finally, to explore hypotheses.
+
+-------------Building an R-script tools:-------------3 main components to all R script tools. N.B Learning how to incorporate ArcGIS datasets into your R scripts to 
+perform data analysis will greatly extend the possibilities that exist for analyzing both spatial and non-spatial data. 
+1) An R script  2) A custom toolbox  3) a DEFNITION OF THE PARAMETERS OF YOUR SCRIPT
+------All R tool scrits follow the same general form 1) tool_exec   2) in_params   3) out_params
+-------R scriptss functions: 1) arc.progress_label   2) arc.progress_pos
+================ANOVA SCRIPT TOOL SAMPLE:======================================================================================================
+
+library(arcgisbinding)
+tool_exec = function(in_params, out_params){
+  # load required pkgs
+  arc.progress_label('Loading required packages...')
+  arc.progress_pos(50)
+  pkgs = c('dplyr')
+  load_pkgs(pkgs)
+  
+  # Get parameters
+  source_data = in_params[[1]]
+  response_value = in_params[[2]]
+  group_var = in_params[[3]]
+  n_groups = as.integer(in_params[[4]])
+  stats_table = out_params[[1]]
+  anova_table = out_params[[2]]
+  
+  
+  # Import data set to data frame
+  arc.progress_label('Reading data...')
+  arc.progress_pos(25)
+  data <- arc.open(source_data)
+  data_df = arc.select(data, fields = c(response_value, group_var))
+  
+  # Group fields into quantile using group field
+  grouped_df = data_df %>%
+    mutate(group = ntile(data_df[[group_var]], n_groups)) %>%
+    group_by(group)
+  
+  # Get stats from groups
+  arc.progress_label('Calcualting summary stats for each group...')
+  arc.progress_pos(50)
+  
+  summary_func = c('mean', 'sd')
+  summary_df = grouped_df%>%
+    summarise_each_(funs_(summary_func), response_value)
+  
+  # Write summary stats to  table
+  if (!is.null(stats_table) && stats_table != 'NA'){
+    arc.write(stats_table, summary_df)
+  }
+  
+  # Create box & whisker plot
+  boxplot(grouped_df[[response_value]] ~ grouped_df[['group']],
+          ylab = response_value, xlab = 'group')
+  
+  # Perform ANOVA
+  arc.progress_label('Performing ANOVA...')
+  arc.progress_pos(75)
+  
+  anova_fit = aov(grouped_df[[response_value]] ~ grouped_df[['group']])
+  anova_result = summary(anova_fit)
+  
+  # Change name of grouping variables label in output, ad write to df
+  rownames(anova_result[[1]])[1] = group_var
+  anova_df = data.frame(anova_result[[1]])
+  
+  # Write ANOVA to table
+  if(!is.null(anova_table) && anova_table != 'NA') {
+    arc.write(anova_table, anova_df)
+    
+  }
+  
+  return(out_params)
+}
+# Install and load all packages provided from a character vector
+load_pkgs = function(pkgs){
+  new_pkgs = pkgs[!(pkgs %in% installed.packages()[, 'Package'])]
+  if (length(new_pkgs) > 0) install.packages(new_pkgs)
+  invisible(lapply(pkgs, function(x)
+    suppressMessages(library(x, character.only = TRUE)))
+  )
+}
+====================================================================================================================================================================
+Writing data from R to ArcGIS datasets. If you are using the arc.write() method from to overwrite an output dataset, you can provide an additional overwrite = TRUE parameter 
+to the arguments. This will delete any existing dataset at the output path, and replace it with the new one that you are writing.
+if you want to save a tabular data from a spatial data frame object, you can wrap the vairable in the data.frame()funs to discard the spatial information:
+>>>arc.write('example.gdb/ontario_data_tbl', data.frame(on_spdata)) - creates a
+new table in an existing example.gdb file geodatabase
+• arc.write('data/ontario_data_tbl.dbf', data.frame(on_spdata) - creates a new
+table in dBASE format in the data folder
+• arc.write('data/ontario_data_tbl.csv' data.frame(on_spdata)) - creates a new
+table in comma-separated variable text format in the data folder.
+========based on raster dataset================================
+• arc.write('example.gdb/raster_dataset', raster_data) - creates a new raster
+dataset in an existing example.gdb file geodatabase
+• arc.write('data/raster_dataset.tif', raster_data) - creates a GeoTiff file in the data folder

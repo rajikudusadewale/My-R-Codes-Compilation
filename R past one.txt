@@ -1,0 +1,279 @@
+INTRODUCTION TO R 
+# My-R-Codes-Compilation
+##My R Intro
+###Tools used ;
+*Rstudio IDE. Download the Rstudio IDE via : https://support--rstudio-com.netlify.app/products/rstudio/download/
+*R Base ; Download the R Base via : https://cran.r-project.org/bin/windows/base/*
+
+**vector-matrix-array-data.frame-factor-lists
+**Why do we need Analytics? 
+**To make better decision. Data analytics helps the organization harness(support) their data and use it to identify new opportunities.
+**Business Analytic examines large and different types of data to uncover hidden patterns correlations and other insights.  
+
+*Data------>Analytics--------->Decisions
+
+**Data visualization allows us visual access to huge amount of data in easily digestible visuals. 
+**One of the most popular used tools for data viualization is R. 
+**R can also be used for a programming language for analytical purposes.
+**R is an example of FLOSS(free/libre and open source software)
+**In R, someone can perform both data analysis and data visualization.
+
+Using parentheses (x<-5) print the command. 
+Use ctrl+shift+c to comments in R, and ctrl+/ in python. 
+<- can be easily derived using alt & -
+Functions are canned script that automate more complicated set of command including operations assignment.
+(na.rm = TRUE) is use to deal with missing data/values'...If your data include missing values, 
+you may want to become familiar with the functions is.na(), na.omit(), and complete.cases().
+
+rooms[!is.na(rooms)]      #Extract those elements which are not missing values.
+
+max(rooms, na.rm=TRUE)    #This ignore the missing values.
+
+#Dates Formatting
+library(lubridate)    #Import package called lubridate.
+
+#There are 2 ways of installing packages; 
+1. Using install.Packages('name_of_pkg') 
+2. (R Base or Rstudio package)Tools>Install Package
+
+for example; let's install called dplyr
+install.packages('dplyr')  -----hit enter, make sure you are connected to the internet.
+
+dplyr functions has the following methods; 
+select(): subset columns,filter(): subset rows on conditions
+mutate(): create new columns by using information from other columns
+group_by() and summarize(): create summary statistics on grouped data
+arrange(): sort results. count(): count discrete values
+
+#FACTORS; represents categorical data. They are stored as integers associated with labels and they can be ordered or unordered.
+
+respondent_floor_type <- factor(c("earth", "cement", "cement", "earth")
+levels(respondent_floor_type)  #this will show distinct labels
+[1] "cement" "earth"
+nlevels(respondent_floor_type)----------------> # this tells number of levels
+>when specifying order
+floor_type <- factor(respondent_floor, levels = c('earth','cement'))  
+#Incase we wanna change the level;
+levels(respondent_floor)[2]= 'bricks'
+levels(respondent_floor)
+
+year_fct <- factor(c(1990, 1983, 1977, 1998, 1990))
+as.numeric(levels(year_fct))[year_fct]
+
+dim(interviews) - returns a vector with the number of rows in the first element, 
+and the number of columns as the second element 
+(the dimensions of the object)
+nrow(interviews) - returns the number of rows
+ncol(interviews) - returns the number of columns
+
+Content:
+head(interviews) - shows the first 6 rows
+tail(interviews) - shows the last 6 rows
+
+#Names: returns the column names (synonym of colnames() for data.frame objects)
+names(interviews) 
+Summary: structure of the object and information about the class, length and content of each column
+summary(interviews)
+str(interviews) -  summary statistics for each column 
+
+# To display a whole dataframe without the first column
+interviews[, -1] 
+         
+
+#Fundamental Concepts of R
+Variables
+Data Operator
+Data Type
+Selection Statements
+Loops.
+
+
+>>>VARIABLES: 
+X = 5, 
+C <- "HELO WORLD" 
+TRUE -> B    #these are assigned vairables
+
+>>>DATA OPERATORs
+Arithmetic operators
+Assignment, relational
+Logical
+Special operators. 
+
+Arithmetic operators: %% means remainder, %/% means division that result into a whole no (7%/%3)= 2 (its called a flow division)
+
+Assignment operators: e <<- 23 is the same as e = 23 also equal to 23 ->> f
+
+Relational operators: 2 < 3 = False, 3 >= 3, true
+
+Logical(Boolean) operators:  TRUE means 1, FALSE means 0.........& means and, | means or, ! means not: x = true, y =  false
+x & y = false, x & x =  true, x | y = true,  y | x = true, y | Y =  false,: !y = true, !x = false
+
+Special operators: (:, colon) it creates the series of numbers in sequence for a vector. 
+>> x <- 2:8, 
+>> x =   [1]2345678.   
+
+%in% is use to identify if an element belongs to a vector, >> x <- 2:8,  >> y <- 5,  >>y %in% x = true
+
+==DATA TYPE: 
+Vectors
+Lists
+MAtrices
+Array
+Factors
+Data Frame
+
+** Vector; is a sequence of data elements of the same basic type. 
+vtr = c(1,3,5,7,9) 
+or 
+vtr <- c(1,3,5,7,9). 
+
+#I can sort, index, replace a vector.
+
+>>vtr = c(1,3,4,11,45,67,87,99), 
+> sortedvtr = sort(vtr1)
+> sortedvtr >>[1] "hello" "hi"    "they" 
+> vtr[2:7] >>[1]  3  4 11 45 67 87
+> vtr[5] >>[1] 45
+> vtr[5] = 16
+> vtr >>[1]  1  3  4 11 16 67 87 99
+> vtr[-3] >>[1]  1  3 11 16 67 87 99
+>>>
+fbi = c(0,1,1,2,3,5,8,13,21,34)
+class(fbi) >> numeric
+fbi > 5
+fbi[fbi > 5]
+fbi[fbi != 5 & fbi != 0]
+fbi[!(fbi %in% c(0,1,5,13))]   >> [1]  2  3  8 21 34
+
+**LISTS: are the R oblects which contain elements of different types like -numbers, strings, vectors, and another list inside it. 
+>>vtr2 = c("hi", 15, 13L, TRUE) 
+list_ <- list("hi", 15, 13L, TRUE)
+
+> list1 <- c(1, 3, 5, 7, 9)
+> list2 <- c("red" ,  "green",  "blue"),
+ list3 = c(list1, list2)
+> list3
+[1] "1"     "3"     "5"     "7"    
+[5] "9"     "red"   "green" "blue"
+
+**ARRAYS: are the R objects which can store data in more than two dimensions. 
+It takes vectors as input and use the values in the dimension parameter to create an array.
+vtr = c(2,4,6,8,10,12)
+> vtr1 = c(2,5,7,9,11,13)
+> arr = array(c(vtr, vtr1), dim = c(6,5,3))  (3 der indicate that the code will run 3x)
+> arr
+1
+
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    2    2    2    2    2
+[2,]    4    5    4    5    4
+[3,]    6    7    6    7    6
+[4,]    8    9    8    9    8
+[5,]   10   11   10   11   10
+[6,]   12   13   12   13   12
+>>>>vtr1 <- c(3,5,3,5,6,7)
+a = array(c(vtr1),dim = c(2,3,2))
+a
+**MATRICES: are the R object in which the elements are arranged in a two-dim rectangular layout. 
+A Matrix is created using the matrix()function.  
+colnames is used to name columns. Matrices have some basic statistical functions that can be called, 
+including rowSums(), colSums(), colMeans(), and sum().
+
+A <- c(2, 4,3, 1, 5, 7)
+amat <- matrix((A), 2,3)
+colnames(amat) <- c("POP2000", "POP2005", "POP2010")
+amat[2,3]    -----> to retrive a value from matrix 
+amat[2,]     -----> means to extract an entire row
+amat[ , 3]    -----> to extract entire column
+amat[ , c(1,3)]    -------> to extract multiple columns at a time
+colSums(amat)
+colMeans(amat)
+
+> vtr1 <- c(1,3,5)
+> vtr2 <- c(2,4,6)
+> mtr <- matrix(c(vtr1, vtr2),3,6)
+> mtr
+     [,1] [,2] [,3] [,4] [,5] [,6]
+[1,]    1    2    1    2    1    2
+[2,]    3    4    3    4    3    4
+[3,]    5    6    5    6    5    6
+
+**FACTORS: are the R objects which are used to categorize the data and store it as levels, 
+they can store both strings and integers, they are useful in data analysis for statistical modeling.
+
+> vt1 <- c(3,5,7,11,15,11,20,3)
+> factorvt1 <- factor(vt1)
+> factorvt1
+[1] 3  5  7  11 15 11 20 3 
+Levels: 3 5 7 11 15 20
+*****
+land.type = factor(c('Residential', 'Commercial', 'Agricultural', 'Commercial', 'Commercial', 'Residential'), levels = c('Agricultural','Residential', 'Commercial'))
+> table(land.type)
+land.type
+Agricultural  Residential   Commercial 
+           1            2            3 
+
+
+**DATA FRAME: is a table or a 2 dim array like structure in which each column contains 
+values of one variable and each row contains one set of values from each column. 
+
+> fid = c(100:104)
+> names = c('john','rozz','dave','whae','shindara')
+> classstd = data.frame(fid,names)
+> classstd
+   fid    names
+1 100     john
+2 101     rozz
+3 102     dave
+4 103     whale
+5 104 shindara
+
+=======how to read csv file to df:===========
+>>df.from.csv <- read.csv("data/growth.csv", header = TRUE)
+]
+====FLOW CONTROL STATEMENTS=========
+if, if..else, & switch are select statements.......
+repeat, for, & while are loop statements...break & continue.
+select statement: if...else:
+
+x <- 3
+y <- 6
+if ((x + y) == 8){
+  print ("x  plus y is equal to 8")
+} else if ((y - x) == 3){
+  print ("y minus x is equal to 3")
+} else if (y %% x == 0){
+  print ("remainder is equal to zero")
+} else{
+  print ("")
+}
+
+**switch statement:
+vtr <- c(150,200,250,300,325,350,400, 450)
+option <- "mean"
+
+switch(option,
+       "mean" = print(mean(vtr)),
+       "median" = print(median(vtr)),
+       print ("invalid input")
+)
+**REPEAT STATEMENT:
+vtr <- c(150,200,250,300,325,350,400, 450)
+option <- "mean"
+
+switch(option,
+       "mean" = print(mean(vtr)),
+       "median" = print(median(vtr)),
+       print ("invalid input")
+)
+**WHILE LOOP:
+x = 2
+while (x <=1000){
+  x = x^2
+  print (x)
+}
+**FOR LOOP:
+vtr <- c("i", "love", "him")
+for (i in vtr){
+  print (i)
+} 
