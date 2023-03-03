@@ -5,7 +5,7 @@
 ###R is an example of FLOSS(free/libre and open source software)
 ###In R, someone can perform both data analysis and data visualization.
 
-##This Projects consist of two part;
+**This Projects consist of two part;
 1. Filled with R basics, explanations and examples
 2. Filled with the use of some R libraries, and R for spatial Analytics.
 ###Tools used ;
@@ -15,9 +15,10 @@
 **vector-matrix-array-data.frame-factor-lists
 ** R packages
 ** R for Spatial Analytics
-**Why do we need Analytics? 
-**To make better decision. Data analytics helps the organization harness(support) their data and use it to identify new opportunities.
-**Business Analytic examines large and different types of data to uncover hidden patterns correlations and other insights.  
+
+Why do we need Analytics? 
+To make better decision. Data analytics helps the organization harness(support) their data and use it to identify new opportunities.
+Business Analytic examines large and different types of data to uncover hidden patterns correlations and other insights.  
 
 *Data------>Analytics--------->Decisions
 
